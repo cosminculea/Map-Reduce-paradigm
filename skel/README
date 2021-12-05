@@ -1,0 +1,80 @@
+Culea Cosmin
+331CA
+
+                    File processing using Map-Reduce paradigm
+
+    ------------------------- Generic classes ----------------------------------
+
+        In order to generalize Map-Reduce paradigm I created 2 abstract classes
+    which hold the parallel logic of creating tasks (MapTask and ReduceTask) and
+    one abstract class which holds the whole logic of creating and executing the
+    tasks through an executor.
+
+    ~~~~ MapTask ~~~~
+
+        Abstract and generic class which implements the Callable interface.
+    The object created needs to receive an initial value I, which later on will
+    be mapped in another value O by the abstract method map which also needs to
+    be implemented. The call method overridden from the Callable interface runs
+    the map method and return the mapped value.
+
+    ~~~~ ReduceTask ~~~~
+
+        Abstract and generic class which implements the Callable interface.
+    The object created needs to receive a list of values type I, which later on
+    will be reduced in a single value O by the abstract method reduce which
+    also needs to be implemented. The call methods overridden from the Callable
+    interface runs the reduce method amd return the result of the reduce logic.
+
+    ~~~~ MapReduceLogic ~~~~
+
+        Abstract and generic class which receives a list of input values which
+    are computed through 3 abstract methods: map, combine and reduce, and one
+    method which has the logic of the map-reduce paradigm:
+        - create an executor with the fixed workers number
+        - create and execute MapTask tasks for every input value and extract the
+    mapped values into a list
+        - execute combine logic for the previous mapped results
+        - create and execute reduce logic tasks for every list resulted from the
+    combine step and extract the final reduced values
+        - return final reduced values
+
+        This class guarantees that all the map and reduce computations are done
+    in parallel.
+
+    -------------------------- Particular classes ------------------------------
+
+        First of all, I created 3 types of classes which are needed to
+    particularize the data computed through the Map-Reduce logic.
+
+    ~~~~ Input ~~~~
+
+        Class which contains the first raw data, which is needed to be computed.
+    The class contains the following information:
+        - the file name from which the sequences are read
+        - the offset in the file where that specific sequence begins
+        - the dimension of the sequence
+
+    ~~~~ MappedInput ~~~~
+
+        Class which contains intermediate data, after the map function is called
+    for Input objects. The class contains the following information:
+        - the file name from which the information was extracted
+        - a map with the lengths of words and their number of appearances for
+    a specific sequence in the file
+        - a list with all the longest words in that sequence
+
+    ~~~~ Output ~~~~
+
+        Class which contains final processed data, after the reduce function is
+    called on all the MappedInput objects extracted from a specific file.
+    The class contains the following information:
+        - the file name from which the final information was extracted
+        - the final rang of the file
+        - the maximum length of the words in the file
+        - the number of appearances of the longest words in the file
+
+    ~~~~ MapReduceFiles ~~~~
+
+        
+
